@@ -1,7 +1,6 @@
 package com.bankonus.temperatureconverter.controller;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -10,39 +9,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bankonus.temperatureconverter.service.TemperatureConverterService;
 import com.bankonus.temperatureconverter.service.TemperatureConverterResponse;
+import com.bankonus.temperatureconverter.service.TemperatureConverterService;
+
+/**
+ * 
+ * @author setubauva
+ *
+ *         Controller class to convert Temperature
+ */
 
 @Controller
 @EnableAsync
 public class TemperatureConverterController {
 
-    @Autowired
-    TemperatureConverterService tempconvService;
+	@Autowired
+	TemperatureConverterService tempconvService;
 
-    @RequestMapping(value = "/convert")
-    public ModelAndView convert(@RequestParam String temp, @RequestParam float fTemp) {
-        ModelAndView mv = new ModelAndView();;
-        try {
-            System.out.println("temp--->" + temp + "---fTemp--->" + fTemp);
-            CompletableFuture<TemperatureConverterResponse> resp = tempconvService.getTemp(temp, fTemp);
-            System.out.println("Farjenheit-->" + resp.get().getFahrenheit());
-            System.out.println("Celcius--->" + resp.get().getCelsius());
+	@RequestMapping(value = "/convert")
+	public ModelAndView convertTemperature(@RequestParam String temperature, @RequestParam String fahrenheitTemp,
+			@RequestParam String celsiusTemp) {
 
-            mv.setViewName("display");
+		ModelAndView modelAndView = new ModelAndView();
+		CompletableFuture<TemperatureConverterResponse> resp;
+		try {
+			if (!fahrenheitTemp.isBlank())
+				resp = tempconvService.getTemp(temperature, fahrenheitTemp);
+			else
+				resp = tempconvService.getTemp(temperature, celsiusTemp);
 
-            mv.addObject("Celcius", resp.get().getCelsius());
+			modelAndView.setViewName("tempCon");
+			modelAndView.addObject("Celcius", resp.get().getCelsius());
+			modelAndView.addObject("Farenheit", resp.get().getFahrenheit());
 
-            mv.addObject("Farenheit", resp.get().getFahrenheit());
-
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return mv;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return modelAndView;
+	}
 
 }

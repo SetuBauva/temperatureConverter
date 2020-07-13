@@ -1,44 +1,32 @@
 package com.bankonus.temperatureconverter.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
+/**
+ * 
+ * @author setubauva
+ *
+ *         Controller to navigate to various jsp pages
+ */
 
 @Controller
-public class LoginController
-{
-    @RequestMapping(value = "/login")
-    public String loginPage() {
+public class LoginController {
+	
+	@RequestMapping(value = "/login")
+	public String loginPage() {
 
-        return "login";
-    }
+		return "login";
+	}
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String loginPage(@RequestParam(value = "error", required = false) String error,
-                            @RequestParam(value = "logout", required = false) String logout,
-                            Model model) {
-        String errorMessge = null;
-        if(error != null) {
-            errorMessge = "Username or Password is incorrect !!";
-        }
-        if(logout != null) {
-            errorMessge = "You have been successfully logged out !!";
-        }
-        model.addAttribute("errorMessge", errorMessge);
-        return "login";
-    }
+	@RequestMapping(value = "/logout-success")
+	public String logoutPage() {
 
-    @RequestMapping(value = "/logout-success")
-    public String logoutPage() {
+		return "login";
+	}
 
-        return "logout";
-    }
+	@RequestMapping("/tempCon")
+	public String temperatureConverterPage() {
+		return "tempCon";
+	}
 }

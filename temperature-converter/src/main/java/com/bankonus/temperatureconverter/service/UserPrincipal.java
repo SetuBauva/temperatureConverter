@@ -11,7 +11,9 @@ import com.bankonus.temperatureconverter.model.Users;
 
 public class UserPrincipal implements UserDetails {
 
-    private Users user;
+	private static final long serialVersionUID = 1L;
+	
+	private Users user;
 
     public UserPrincipal(Users user) {
         super();
