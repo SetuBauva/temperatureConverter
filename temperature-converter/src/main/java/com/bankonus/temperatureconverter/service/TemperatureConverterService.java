@@ -11,7 +11,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,8 +25,6 @@ import org.springframework.web.client.RestTemplate;
 public class TemperatureConverterService {
 
 	RestTemplate restTemplate = new RestTemplate();
-	@Value("${service.url}")
-	private String url;
 
 	/**
 	 * This method is used to call the webservice using restTemplate and unmarshall
@@ -42,7 +39,9 @@ public class TemperatureConverterService {
 
 		TemperatureConverterResponse response = null;
 		try {
-			String result = restTemplate.getForObject(url + conversion + "&val=" + temp, String.class, 200);
+			String result = restTemplate
+					.getForObject("http://www.q88.com/WS/Q88WSInternal.asmx/ConvertTemperature?property=" + conversion
+							+ "&val=" + temp, String.class, 200);
 
 			java.io.FileWriter filewriter = new java.io.FileWriter("response.xml");
 			filewriter.write(result);
